@@ -2,6 +2,7 @@ using _Project.Scripts.Events;
 using _Project.Scripts.Patterns;
 using _Project.Scripts.Utilities;
 using _Project.Settings.Input;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace _Project.Scripts.Managers
@@ -10,27 +11,45 @@ namespace _Project.Scripts.Managers
     {
         private GameInputActions _inputActions;
 
+        #region INPUT_HANDLERS
+
+        #region UI
+
+        private static void PerformCancel(InputAction.CallbackContext context)
+        {
+            InputEvents.OnCancel?.Invoke();
+        }
+
+        #endregion
+
+        #region GAMEPLAY
+
+        private static void PerformMoveByKeys(InputAction.CallbackContext context)
+        {
+            InputEvents.OnMoveByKeys?.Invoke(context.ReadValue<float>());
+        }
+
+        private static void CancelMoveByKeys(InputAction.CallbackContext context)
+        {
+            InputEvents.OnMoveByKeys?.Invoke(0f);
+        }
+
+        private static void HandleMoveByPointer(InputAction.CallbackContext context)
+        {
+            InputEvents.OnMoveByPointer?.Invoke(context.ReadValue<Vector2>());
+        }
+
+        #endregion
+
+        #endregion
+
+        #region INITIALIZATION
+
         protected override void LoadComponents()
         {
             base.LoadComponents();
 
             LoadInputActions();
-        }
-
-        protected override void SubscribeEvents()
-        {
-            base.SubscribeEvents();
-
-            _inputActions.Enable();
-            SubscribeUIInput();
-        }
-
-        protected override void UnsubscribeEvents()
-        {
-            base.UnsubscribeEvents();
-
-            _inputActions.Disable();
-            UnsubscribeUIInput();
         }
 
         private void LoadInputActions()
@@ -40,19 +59,64 @@ namespace _Project.Scripts.Managers
             AppLogger.Log(name, $"Successfully loaded {nameof(GameInputActions)}.");
         }
 
+        #endregion
+
+        #region EVENT_HANDLERS
+
+        #region GLOBAL
+
+        protected override void SubscribeEvents()
+        {
+            base.SubscribeEvents();
+
+            _inputActions.Enable();
+            SubscribeUIInput();
+            SubscribeGameplayInput();
+        }
+
+        protected override void UnsubscribeEvents()
+        {
+            base.UnsubscribeEvents();
+
+            _inputActions.Disable();
+            UnsubscribeUIInput();
+            UnsubscribeGameplayInput();
+        }
+
+        #endregion
+
+        #region UI
+
         private void SubscribeUIInput()
         {
-            _inputActions.UI.Cancel.performed += HandleCancel;
+            _inputActions.UI.Cancel.performed += PerformCancel;
         }
 
         private void UnsubscribeUIInput()
         {
-            _inputActions.UI.Cancel.performed -= HandleCancel;
+            _inputActions.UI.Cancel.performed -= PerformCancel;
         }
 
-        private static void HandleCancel(InputAction.CallbackContext context)
+        #endregion
+
+        #region GAMEPLAY
+
+        private void SubscribeGameplayInput()
         {
-            InputEvents.OnCancel?.Invoke();
+            _inputActions.Gameplay.MoveByKeys.performed += PerformMoveByKeys;
+            _inputActions.Gameplay.MoveByKeys.canceled += CancelMoveByKeys;
+            _inputActions.Gameplay.MoveByPointer.performed += HandleMoveByPointer;
         }
+
+        private void UnsubscribeGameplayInput()
+        {
+            _inputActions.Gameplay.MoveByKeys.performed -= PerformMoveByKeys;
+            _inputActions.Gameplay.MoveByKeys.canceled -= CancelMoveByKeys;
+            _inputActions.Gameplay.MoveByPointer.performed -= HandleMoveByPointer;
+        }
+
+        #endregion
+
+        #endregion
     }
 }

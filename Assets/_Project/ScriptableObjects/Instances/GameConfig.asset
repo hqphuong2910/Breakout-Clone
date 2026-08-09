@@ -19,4 +19,4 @@ MonoBehaviour:
   mainMenuSceneName: 01_MainMenu
   gameplaySceneName: 02_Gameplay
   enableLogs: 1
-  bypassMainMenu: 0
+  bypassMainMenu: 1
