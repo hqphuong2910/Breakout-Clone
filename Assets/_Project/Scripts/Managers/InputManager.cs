@@ -34,7 +34,7 @@ namespace _Project.Scripts.Managers
             InputEvents.OnMoveByKeys?.Invoke(0f);
         }
 
-        private static void HandleMoveByPointer(InputAction.CallbackContext context)
+        private static void PerformMoveByPointer(InputAction.CallbackContext context)
         {
             InputEvents.OnMoveByPointer?.Invoke(context.ReadValue<Vector2>());
         }
@@ -105,14 +105,14 @@ namespace _Project.Scripts.Managers
         {
             _inputActions.Gameplay.MoveByKeys.performed += PerformMoveByKeys;
             _inputActions.Gameplay.MoveByKeys.canceled += CancelMoveByKeys;
-            _inputActions.Gameplay.MoveByPointer.performed += HandleMoveByPointer;
+            _inputActions.Gameplay.MoveByPointer.performed += PerformMoveByPointer;
         }
 
         private void UnsubscribeGameplayInput()
         {
             _inputActions.Gameplay.MoveByKeys.performed -= PerformMoveByKeys;
             _inputActions.Gameplay.MoveByKeys.canceled -= CancelMoveByKeys;
-            _inputActions.Gameplay.MoveByPointer.performed -= HandleMoveByPointer;
+            _inputActions.Gameplay.MoveByPointer.performed -= PerformMoveByPointer;
         }
 
         #endregion
