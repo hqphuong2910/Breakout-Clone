@@ -11,38 +11,6 @@ namespace _Project.Scripts.Managers
     {
         private GameInputActions _inputActions;
 
-        #region INPUT_HANDLERS
-
-        #region UI
-
-        private static void PerformCancel(InputAction.CallbackContext context)
-        {
-            InputEvents.OnCancel?.Invoke();
-        }
-
-        #endregion
-
-        #region GAMEPLAY
-
-        private static void PerformMoveByKeys(InputAction.CallbackContext context)
-        {
-            InputEvents.OnMoveByKeys?.Invoke(context.ReadValue<float>());
-        }
-
-        private static void CancelMoveByKeys(InputAction.CallbackContext context)
-        {
-            InputEvents.OnMoveByKeys?.Invoke(0f);
-        }
-
-        private static void PerformMoveByPointer(InputAction.CallbackContext context)
-        {
-            InputEvents.OnMoveByPointer?.Invoke(context.ReadValue<Vector2>());
-        }
-
-        #endregion
-
-        #endregion
-
         #region INITIALIZATION
 
         protected override void LoadComponents()
@@ -106,6 +74,7 @@ namespace _Project.Scripts.Managers
             _inputActions.Gameplay.MoveByKeys.performed += PerformMoveByKeys;
             _inputActions.Gameplay.MoveByKeys.canceled += CancelMoveByKeys;
             _inputActions.Gameplay.MoveByPointer.performed += PerformMoveByPointer;
+            _inputActions.Gameplay.Launch.performed += PerformLaunch;
         }
 
         private void UnsubscribeGameplayInput()
@@ -113,6 +82,44 @@ namespace _Project.Scripts.Managers
             _inputActions.Gameplay.MoveByKeys.performed -= PerformMoveByKeys;
             _inputActions.Gameplay.MoveByKeys.canceled -= CancelMoveByKeys;
             _inputActions.Gameplay.MoveByPointer.performed -= PerformMoveByPointer;
+            _inputActions.Gameplay.Launch.performed -= PerformLaunch;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region INPUT_HANDLERS
+
+        #region UI
+
+        private static void PerformCancel(InputAction.CallbackContext context)
+        {
+            InputEvents.OnCancel?.Invoke();
+        }
+
+        #endregion
+
+        #region GAMEPLAY
+
+        private static void PerformMoveByKeys(InputAction.CallbackContext context)
+        {
+            InputEvents.OnMoveByKeys?.Invoke(context.ReadValue<float>());
+        }
+
+        private static void CancelMoveByKeys(InputAction.CallbackContext context)
+        {
+            InputEvents.OnMoveByKeys?.Invoke(0f);
+        }
+
+        private static void PerformMoveByPointer(InputAction.CallbackContext context)
+        {
+            InputEvents.OnMoveByPointer?.Invoke(context.ReadValue<Vector2>());
+        }
+
+        private static void PerformLaunch(InputAction.CallbackContext context)
+        {
+            InputEvents.OnLaunch?.Invoke();
         }
 
         #endregion
