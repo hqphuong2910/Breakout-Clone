@@ -11,5 +11,6 @@ namespace _Project.Scripts.Events
         // Gameplay events
         public static Action<float> OnMoveByKeys;
         public static Action<Vector2> OnMoveByPointer;
+        public static Action OnLaunch;
     }
 }

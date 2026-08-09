@@ -24,32 +24,14 @@ namespace _Project.Scripts.Entities
 
         private Rigidbody2D _rb;
 
-        private void FixedUpdate()
-        {
-            HandleMovement();
-        }
-
-        private void HandleMovement()
-        {
-            var moveDirection = new Vector2();
-            switch (controlConfig.controlType)
-            {
-                case ControlType.KeyboardOrGamepad:
-                    var moveDelta = _moveInput * moveSpeed * Time.fixedDeltaTime;
-                    var nextX = transform.position.x + moveDelta;
-                    nextX = Mathf.Clamp(nextX, -maxX, maxX);
-                    moveDirection = new Vector2(nextX, transform.position.y);
-                    break;
-                case ControlType.MouseOrTouchscreen:
-                    _pointerTargetX = Mathf.Clamp(_pointerTargetX, -maxX, maxX);
-                    moveDirection = new Vector2(_pointerTargetX, transform.position.y);
-                    break;
-            }
-
-            _rb.MovePosition(moveDirection);
-        }
-
         #region INITIALIZATION
+
+        protected override void Start()
+        {
+            base.Start();
+
+            GameEvents.OnPaddleReady?.Invoke(transform);
+        }
 
         protected override void LoadComponents()
         {
@@ -107,6 +89,38 @@ namespace _Project.Scripts.Entities
             var posZ = Mathf.Abs(Camera.main.transform.position.z);
             var newPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, posZ));
             _pointerTargetX = newPos.x;
+        }
+
+        #endregion
+
+        #region PADDLE_PHYSICS
+
+        private void FixedUpdate()
+        {
+            HandleMovement();
+        }
+
+        private void HandleMovement()
+        {
+            Vector2 moveDirection;
+            switch (controlConfig.controlType)
+            {
+                case ControlType.KeyboardOrGamepad:
+                    var moveDelta = _moveInput * moveSpeed * Time.fixedDeltaTime;
+                    var nextX = transform.position.x + moveDelta;
+                    nextX = Mathf.Clamp(nextX, -maxX, maxX);
+                    moveDirection = new Vector2(nextX, transform.position.y);
+                    break;
+                case ControlType.MouseOrTouchscreen:
+                    _pointerTargetX = Mathf.Clamp(_pointerTargetX, -maxX, maxX);
+                    moveDirection = new Vector2(_pointerTargetX, transform.position.y);
+                    break;
+                default:
+                    moveDirection = Vector2.zero;
+                    break;
+            }
+
+            _rb.MovePosition(moveDirection);
         }
 
         #endregion

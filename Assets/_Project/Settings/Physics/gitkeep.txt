@@ -1,1 +1,0 @@
-﻿This file was created to make Git track the folder AND CAN BE DELETED WHEN THIS FOLDER CONTAINS ANY PROJECT FILES.
