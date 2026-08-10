@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using _Project.Scripts.Enums;
 using _Project.Scripts.Events;
 using _Project.Scripts.Patterns;
@@ -12,7 +11,7 @@ namespace _Project.Scripts.Managers
     public class UIManager : Singleton<UIManager>
     {
         [Header("UI Configurations")]
-        [Tooltip("Drag and drop the screen objects that match the screen types here.")]
+        [Tooltip("Attach the screen objects and set their corresponding screen type here.")]
         [SerializeField]
         private List<ScreenMapping> screenMappings;
 
@@ -34,7 +33,8 @@ namespace _Project.Scripts.Managers
         {
             base.LoadComponents();
 
-            foreach (var mapping in screenMappings.Where(mappings => mappings.screenObject))
+            if (screenMappings is not { Count: > 0 }) return;
+            foreach (var mapping in screenMappings)
             {
                 mapping.screenObject.SetActive(false);
                 _screenDict.Add(mapping.screenType, mapping.screenObject);
@@ -59,6 +59,7 @@ namespace _Project.Scripts.Managers
             UIEvents.OnOpenScreen += OpenScreen;
             UIEvents.OnCloseTopScreen += CloseTopScreen;
             UIEvents.OnCloseAllScreens += CloseAllScreens;
+            GameEvents.OnGameStateChanged += HandleGameStateChanged;
         }
 
         protected override void UnsubscribeEvents()
@@ -68,6 +69,7 @@ namespace _Project.Scripts.Managers
             UIEvents.OnOpenScreen -= OpenScreen;
             UIEvents.OnCloseTopScreen -= CloseTopScreen;
             UIEvents.OnCloseAllScreens -= CloseAllScreens;
+            GameEvents.OnGameStateChanged -= HandleGameStateChanged;
         }
 
         #endregion
@@ -76,6 +78,8 @@ namespace _Project.Scripts.Managers
 
         private void OpenScreen(ScreenType type)
         {
+            if (type == ScreenType.None) return;
+
             if (!_screenDict.TryGetValue(type, out var targetScreen))
             {
                 AppLogger.LogWarning(name, $"Screen {type} is not registered in {name}.");
@@ -107,6 +111,35 @@ namespace _Project.Scripts.Managers
         private void CloseAllScreens()
         {
             while (_screenStack.Count > 0) _screenStack.Pop().SetActive(false);
+        }
+
+        private void HandleGameStateChanged(GameState state)
+        {
+            switch (state)
+            {
+                case GameState.Initializing:
+                    OpenScreen(ScreenType.LoadingScreen);
+                    break;
+                case GameState.MainMenu:
+                    CloseAllScreens();
+                    OpenScreen(ScreenType.MainMenu);
+                    break;
+                case GameState.Started:
+                    CloseAllScreens();
+                    OpenScreen(ScreenType.HUD);
+                    break;
+                case GameState.Paused:
+                    OpenScreen(ScreenType.PauseMenu);
+                    break;
+                case GameState.LevelCompleted:
+                    break;
+                case GameState.GameOver:
+                    OpenScreen(ScreenType.GameOver);
+                    break;
+                default:
+                    AppLogger.LogError(name, $"No suitable screens found for current game state: {state}.");
+                    break;
+            }
         }
 
         #endregion

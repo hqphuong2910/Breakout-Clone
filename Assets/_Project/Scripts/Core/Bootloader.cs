@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Core
 {
+    [DefaultExecutionOrder(int.MinValue)]
     public class Bootloader : Singleton<Bootloader>
     {
         [Header("Dependencies")] [SerializeField]

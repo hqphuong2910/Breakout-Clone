@@ -6,7 +6,7 @@
         LoadingScreen,
         MainMenu,
         Settings,
-        Gameplay,
+        HUD,
         PauseMenu,
         GameOver,
         ConfirmExit

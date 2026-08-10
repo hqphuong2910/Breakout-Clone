@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43f06ed5d1ec434ea8cf7423c8bf1d79, type: 3}
   m_Name: ControlConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.ScriptableObjects.Scripts.ControlConfigSO
-  controlType: 0
+  controlType: 1

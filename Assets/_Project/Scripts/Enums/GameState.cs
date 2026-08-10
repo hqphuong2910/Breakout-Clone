@@ -4,7 +4,7 @@
     {
         Initializing,
         MainMenu,
-        Playing,
+        Started,
         Paused,
         LevelCompleted,
         GameOver

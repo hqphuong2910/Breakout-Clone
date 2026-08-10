@@ -576,7 +576,7 @@ GameObject:
   - component: {fileID: 452483158}
   - component: {fileID: 452483161}
   m_Layer: 5
-  m_Name: Quit Button
+  m_Name: QuitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1355,7 +1355,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1171136157}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: _Project.Scripts.Managers.MainMenuManager, Assembly-CSharp
         m_MethodName: Quit
         m_Mode: 1
@@ -1457,7 +1457,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ReferenceResolution: {x: 1080, y: 1920}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1527,50 +1527,6 @@ MonoBehaviour:
   - screenType: 7
     screenObject: {fileID: 2027556701}
   defaultScreen: 2
---- !u!1 &1171136155
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1171136156}
-  - component: {fileID: 1171136157}
-  m_Layer: 0
-  m_Name: MainMenuManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1171136156
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1171136155}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1171136157
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1171136155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a534b56a952a594fbe5f30e8f1f17c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Managers.MainMenuManager
 --- !u!1 &1715464433
 GameObject:
   m_ObjectHideFlags: 0
@@ -1719,8 +1675,9 @@ GameObject:
   - component: {fileID: 1932720344}
   - component: {fileID: 1932720346}
   - component: {fileID: 1932720345}
+  - component: {fileID: 1932720347}
   m_Layer: 5
-  m_Name: MainMenu
+  m_Name: MainMenuScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1785,6 +1742,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1932720343}
   m_CullTransparentMesh: 1
+--- !u!114 &1932720347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932720343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a534b56a952a594fbe5f30e8f1f17c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.UI.MainMenuScreen
+  playButton: {fileID: 2010038908}
 --- !u!1 &1955969504
 GameObject:
   m_ObjectHideFlags: 0
@@ -1831,7 +1801,7 @@ GameObject:
   - component: {fileID: 2010038909}
   - component: {fileID: 2010038908}
   m_Layer: 5
-  m_Name: Play Button
+  m_Name: PlayButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1900,19 +1870,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2010038909}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1171136157}
-        m_TargetAssemblyTypeName: _Project.Scripts.Managers.MainMenuManager, Assembly-CSharp
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2010038909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1962,13 +1920,14 @@ GameObject:
   - component: {fileID: 2027556702}
   - component: {fileID: 2027556704}
   - component: {fileID: 2027556703}
+  - component: {fileID: 2027556705}
   m_Layer: 5
-  m_Name: ConfirmExitPanel
+  m_Name: ConfirmExitScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2027556702
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2027,6 +1986,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2027556701}
   m_CullTransparentMesh: 1
+--- !u!114 &2027556705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027556701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59e953bb15b34baaa4b3b69f2dff872f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.UI.ConfirmExitScreen
+  confirmButton: {fileID: 843219775}
 --- !u!1 &2114356018
 GameObject:
   m_ObjectHideFlags: 0
@@ -2111,4 +2083,3 @@ SceneRoots:
   m_Roots:
   - {fileID: 60145163}
   - {fileID: 1955969505}
-  - {fileID: 1171136156}
