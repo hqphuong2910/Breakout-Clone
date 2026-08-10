@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Project.ScriptableObjects.Scripts
 {
-    [CreateAssetMenu(menuName = "Breakout/GameConfig", fileName = "GameConfig")]
+    [CreateAssetMenu(menuName = "Breakout/Game Configuration", fileName = "GameConfig")]
     public class GameConfigSO : ScriptableObject
     {
         [Header("App Info")] public string appName = "Breakout";

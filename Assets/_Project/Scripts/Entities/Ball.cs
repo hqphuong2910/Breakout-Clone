@@ -1,5 +1,4 @@
-﻿using System;
-using _Project.Scripts.Core;
+﻿using _Project.Scripts.Core;
 using _Project.Scripts.Events;
 using _Project.Scripts.Utilities;
 using UnityEngine;
