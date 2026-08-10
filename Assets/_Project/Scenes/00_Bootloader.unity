@@ -739,6 +739,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d77257d342982ed4fbf4bd94b49168b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Managers.GameManager
+  gameConfig: {fileID: 11400000, guid: 1cb1bbec4da50364e95219feba36e52c, type: 2}
+  maxLives: 3
 --- !u!1 &1245964847
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,29 +23,13 @@ namespace _Project.Scripts.Managers
 
         [SerializeField] private AudioSource SFXSource;
 
+        #region INITIALIZATION
+
         protected override void LoadComponents()
         {
             base.LoadComponents();
 
             LoadAudioSource();
-        }
-
-        protected override void SubscribeEvents()
-        {
-            base.SubscribeEvents();
-
-            AudioEvents.OnPlayBGM += PlayMusic;
-            AudioEvents.OnStopBGM += StopMusic;
-            AudioEvents.OnPlaySFX += PlaySFX;
-        }
-
-        protected override void UnsubscribeEvents()
-        {
-            base.UnsubscribeEvents();
-
-            AudioEvents.OnPlayBGM -= PlayMusic;
-            AudioEvents.OnStopBGM -= StopMusic;
-            AudioEvents.OnPlaySFX -= PlaySFX;
         }
 
         private void LoadAudioSource()
@@ -70,7 +54,33 @@ namespace _Project.Scripts.Managers
             AppLogger.Log(name, "Successfully loaded SFX audio source.");
         }
 
-        #region EVENT RECEIVERS
+        #endregion
+
+        #region EVENT_HANDLERS
+
+        protected override void SubscribeEvents()
+        {
+            base.SubscribeEvents();
+
+            AudioEvents.OnPlayBGM += PlayMusic;
+            AudioEvents.OnStopBGM += StopMusic;
+            AudioEvents.OnPlaySFX += PlaySFX;
+        }
+
+        protected override void UnsubscribeEvents()
+        {
+            base.UnsubscribeEvents();
+
+            AudioEvents.OnPlayBGM -= PlayMusic;
+            AudioEvents.OnStopBGM -= StopMusic;
+            AudioEvents.OnPlaySFX -= PlaySFX;
+        }
+
+        #endregion
+
+        #region AUDIO_HANDLERS
+
+        #region PLAYERS
 
         private void PlayMusic(AudioClip clip, bool loop = true)
         {
@@ -95,7 +105,7 @@ namespace _Project.Scripts.Managers
 
         #endregion
 
-        #region VOLUME SETTINGS
+        #region VOLUME_HANDLERS
 
         private void SetVolume(string paramName, float sliderValue)
         {
@@ -117,6 +127,8 @@ namespace _Project.Scripts.Managers
         {
             SetVolume(SFXVolume, sliderValue);
         }
+
+        #endregion
 
         #endregion
     }

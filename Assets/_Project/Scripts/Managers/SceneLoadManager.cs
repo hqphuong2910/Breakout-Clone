@@ -13,25 +13,7 @@ namespace _Project.Scripts.Managers
         [Header("Dependencies")] [SerializeField]
         private GameConfigSO gameConfig;
 
-        protected override void SubscribeEvents()
-        {
-            base.SubscribeEvents();
-
-            SceneEvents.OnRequestLoadGameplay += LoadGameplayScene;
-            SceneEvents.OnRequestLoadMainMenu += LoadMainMenuScene;
-            SceneEvents.OnRequestLoadScene += LoadSceneByName;
-        }
-
-        protected override void UnsubscribeEvents()
-        {
-            base.UnsubscribeEvents();
-
-            SceneEvents.OnRequestLoadGameplay -= LoadGameplayScene;
-            SceneEvents.OnRequestLoadMainMenu -= LoadMainMenuScene;
-            SceneEvents.OnRequestLoadScene -= LoadSceneByName;
-        }
-
-        #region ASYCN LOADING ROUTINE
+        #region ASYCN_LOADING_ROUTINE
 
         private IEnumerator LoadSceneAsyncRoutine(string sceneName)
         {
@@ -59,8 +41,29 @@ namespace _Project.Scripts.Managers
 
         #endregion
 
+        #region EVENT_HANDLERS
 
-        #region EVENT HANDLERS
+        protected override void SubscribeEvents()
+        {
+            base.SubscribeEvents();
+
+            SceneEvents.OnRequestLoadGameplay += LoadGameplayScene;
+            SceneEvents.OnRequestLoadMainMenu += LoadMainMenuScene;
+            SceneEvents.OnRequestLoadScene += LoadSceneByName;
+        }
+
+        protected override void UnsubscribeEvents()
+        {
+            base.UnsubscribeEvents();
+
+            SceneEvents.OnRequestLoadGameplay -= LoadGameplayScene;
+            SceneEvents.OnRequestLoadMainMenu -= LoadMainMenuScene;
+            SceneEvents.OnRequestLoadScene -= LoadSceneByName;
+        }
+
+        #endregion
+
+        #region SCENE_HANDLERS
 
         private void LoadGameplayScene()
         {

@@ -11,9 +11,12 @@ namespace _Project.Scripts.Entities
     public class Brick : MyBehaviour
     {
         [SerializeField] private BrickDataSO brickData;
+
         private int _currentHp;
 
         private SpriteRenderer _renderer;
+
+        public bool IsUnbreakable => brickData && brickData.isUnbreakable;
 
         private void OnCollisionEnter2D(Collision2D other)
         {
@@ -43,7 +46,7 @@ namespace _Project.Scripts.Entities
         private void Die()
         {
             gameObject.Despawn();
-            GameEvents.OnBrickDestroyed?.Invoke();
+            GameEvents.OnBrickDestroyed?.Invoke(brickData.scoreValue);
         }
 
         private void UpdateCrackedSprites()

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GameConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.ScriptableObjects.Scripts.GameConfigSO
   gameName: Breakout
-  gameVersion: 0.4.0
+  gameVersion: 0.5.0
   targetFPS: 60
   vSync: 1
   mainMenuSceneName: 01_MainMenu
