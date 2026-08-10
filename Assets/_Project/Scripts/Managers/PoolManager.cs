@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using _Project.Scripts.Patterns;
 using _Project.Scripts.Utilities;
 using UnityEngine;
@@ -15,10 +16,37 @@ namespace _Project.Scripts.Managers
         private readonly Dictionary<int, ObjectPool<GameObject>> _pools = new();
         private readonly Dictionary<GameObject, ObjectPool<GameObject>> _spawnedObjects = new();
 
+        protected override void Start()
+        {
+            base.Start();
+
+            PreWarmPools();
+        }
+
+        private void PreWarmPools()
+        {
+            if (initialPools is not { Count: > 0 }) return;
+            foreach (var config in initialPools.Where(config => config.prefab))
+            {
+                CreatePool(config.prefab, config.defaultCapacity, config.maxSize);
+
+                var preWarmedObjects = new List<GameObject>();
+                for (var i = 0; i < config.defaultCapacity; i++)
+                {
+                    var obj = Spawn(config.prefab, Vector3.zero, Quaternion.identity);
+                    preWarmedObjects.Add(obj);
+                }
+
+                foreach (var obj in preWarmedObjects) Despawn(obj);
+            }
+
+            AppLogger.Log(name, "Successfully pre-warmed all registered pools.");
+        }
+
         /// <summary>
         ///     Create new pool if not exists.
         /// </summary>
-        public void CreatePool(GameObject prefab, int defaultCapacity = 20, int maxSize = 100)
+        private void CreatePool(GameObject prefab, int defaultCapacity = 20, int maxSize = 100)
         {
             var poolKey = prefab.GetInstanceID();
             if (_pools.ContainsKey(poolKey)) return;

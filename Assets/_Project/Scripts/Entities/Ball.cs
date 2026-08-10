@@ -1,5 +1,4 @@
-﻿using System;
-using _Project.Scripts.Core;
+﻿using _Project.Scripts.Core;
 using _Project.Scripts.Events;
 using _Project.Scripts.Utilities;
 using UnityEngine;
@@ -114,10 +113,9 @@ namespace _Project.Scripts.Entities
         {
             if (other.CompareTag("DeadZone"))
             {
-                ResetBall();
                 GameEvents.OnBallDropped?.Invoke();
-
                 AppLogger.Log(name, $"Dropped into {other.name}.");
+                ResetBall();
             }
         }
 
