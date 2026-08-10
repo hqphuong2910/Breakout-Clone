@@ -52,7 +52,7 @@ namespace _Project.Scripts.Core
             AppLogger.Log(name, "Initializing backend systems...");
             // TODO: Delete the line below and implement actual system initialization logic.
             yield return new WaitForSeconds(0.5f);
-            AppLogger.Log(name, $"Backend systems are ready, firing {SystemEvents.OnSystemReady}.");
+            AppLogger.Log(name, "Backend systems are ready.");
             SystemEvents.OnSystemReady?.Invoke();
         }
     }

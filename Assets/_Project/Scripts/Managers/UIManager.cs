@@ -21,6 +21,15 @@ namespace _Project.Scripts.Managers
         private readonly Dictionary<ScreenType, GameObject> _screenDict = new();
         private readonly Stack<GameObject> _screenStack = new();
 
+        [Serializable]
+        public struct ScreenMapping
+        {
+            public ScreenType screenType;
+            public GameObject screenObject;
+        }
+
+        #region INITIALIZATION
+
         protected override void LoadComponents()
         {
             base.LoadComponents();
@@ -39,6 +48,10 @@ namespace _Project.Scripts.Managers
             if (defaultScreen != ScreenType.None) OpenScreen(defaultScreen);
         }
 
+        #endregion
+
+        #region EVENT_HANDLERS
+
         protected override void SubscribeEvents()
         {
             base.SubscribeEvents();
@@ -56,6 +69,10 @@ namespace _Project.Scripts.Managers
             UIEvents.OnCloseTopScreen -= CloseTopScreen;
             UIEvents.OnCloseAllScreens -= CloseAllScreens;
         }
+
+        #endregion
+
+        #region SCREEN_HANDLERS
 
         private void OpenScreen(ScreenType type)
         {
@@ -92,11 +109,6 @@ namespace _Project.Scripts.Managers
             while (_screenStack.Count > 0) _screenStack.Pop().SetActive(false);
         }
 
-        [Serializable]
-        public struct ScreenMapping
-        {
-            public ScreenType screenType;
-            public GameObject screenObject;
-        }
+        #endregion
     }
 }
