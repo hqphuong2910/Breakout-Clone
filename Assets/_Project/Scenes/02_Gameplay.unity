@@ -1009,7 +1009,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5792e2691fe45e596b9b953bb702dcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Entities.Ball
-  launchSpeed: 6
+  ballSpeed: 6
+  maxXDirection: 1
+  offsetWithPaddle: {x: 0, y: 0.3}
+  bounceMultiplier: 1
 --- !u!50 &1615703437
 Rigidbody2D:
   serializedVersion: 5
@@ -1115,6 +1118,59 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &1810567899
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1810567900}
+  - component: {fileID: 1810567901}
+  m_Layer: 0
+  m_Name: BrickManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1810567900
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1810567899}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1810567901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1810567899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a261ba9ed8244590a2561de34098bd7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Managers.BrickManager
+  brickPrefabs:
+  - {fileID: 2427181119001502466, guid: c5bbecd494e35d546945a0099c7f7e60, type: 3}
+  - {fileID: 428056581134861022, guid: d353278ae54e5f245b8dda9221d957a9, type: 3}
+  - {fileID: 6738865020661631196, guid: 907925e7fe696df45a98e4161d7b27be, type: 3}
+  columns: 9
+  rows: 9
+  startPosY: 4.7
+  gapX: 0.05
+  gapY: 0.05
 --- !u!1 &1918015633
 GameObject:
   m_ObjectHideFlags: 0
@@ -1258,5 +1314,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 353670801}
+  - {fileID: 1810567900}
   - {fileID: 555979133}
   - {fileID: 1615703434}

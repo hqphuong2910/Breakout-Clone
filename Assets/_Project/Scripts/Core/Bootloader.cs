@@ -43,8 +43,8 @@ namespace _Project.Scripts.Core
             QualitySettings.vSyncCount = gameConfig.vSync ? 1 : 0;
 
             AppLogger.Log(name,
-                $"Loading {gameConfig.appName}: " +
-                $"Version: {gameConfig.appVersion}");
+                $"Loading {gameConfig.gameName}: " +
+                $"Version: {gameConfig.gameVersion}");
         }
 
         private IEnumerator InitializeSystem()

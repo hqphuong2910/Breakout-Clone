@@ -113,10 +113,9 @@ namespace _Project.Scripts.Entities
         {
             if (other.CompareTag("DeadZone"))
             {
-                ResetBall();
                 GameEvents.OnBallDropped?.Invoke();
-
                 AppLogger.Log(name, $"Dropped into {other.name}.");
+                ResetBall();
             }
         }
 
