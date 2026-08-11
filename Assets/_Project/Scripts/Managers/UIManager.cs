@@ -88,7 +88,7 @@ namespace _Project.Scripts.Managers
 
             if (!_screenDict.TryGetValue(type, out var targetScreen))
             {
-                AppLogger.LogWarning(this, $"Screen {type} is not registered in {name}.");
+                AppLogger.LogWarning(this, $"Screen {type} is not registered.");
                 return;
             }
 
@@ -139,7 +139,9 @@ namespace _Project.Scripts.Managers
                     OpenScreen(ScreenType.GameOver);
                     break;
                 default:
-                    AppLogger.LogError(this, $"No suitable screens found for current game state: {state}.");
+                    AppLogger.LogError(this,
+                        $"No suitable screens found for current game state: {state}."
+                    );
                     break;
             }
         }

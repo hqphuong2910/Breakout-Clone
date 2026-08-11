@@ -113,7 +113,7 @@ namespace _Project.Scripts.Managers
             AppLogger.Log(this, "Game paused.");
         }
 
-        private void ResumeGame()
+        public void ResumeGame()
         {
             if (CurrentState != GameState.Paused) return;
 

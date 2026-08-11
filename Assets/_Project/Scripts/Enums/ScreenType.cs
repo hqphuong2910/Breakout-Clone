@@ -9,6 +9,7 @@
         HUD,
         PauseMenu,
         GameOver,
-        ConfirmExit
+        ConfirmExit,
+        ConfirmBack
     }
 }

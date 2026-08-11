@@ -52,7 +52,6 @@ namespace _Project.Scripts.UI
         private void HandleSystemReady()
         {
             _isSystemReady = true;
-            AppLogger.Log(this, "System is ready.");
             TryTransition();
         }
 

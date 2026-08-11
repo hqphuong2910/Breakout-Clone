@@ -1,21 +1,15 @@
 ﻿using _Project.Scripts.Core;
 using _Project.Scripts.Enums;
 using _Project.Scripts.Events;
+using _Project.Scripts.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace _Project.Scripts.UI
 {
     [RequireComponent(typeof(Button))]
-    public class UIButtonSender : MyBehaviour
+    public class ToggleScreenButton : MyBehaviour
     {
-        public enum ActionType
-        {
-            OpenScreen,
-            CloseTopScreen,
-            CloseAllScreens
-        }
-
         [SerializeField] private ActionType actionType;
 
         [Tooltip("Only works if ActionType is OpenScreen.")] [SerializeField]
@@ -49,7 +43,17 @@ namespace _Project.Scripts.UI
                 case ActionType.CloseAllScreens:
                     UIEvents.OnCloseAllScreens?.Invoke();
                     break;
+                default:
+                    AppLogger.LogWarning(this, "Invalid action type.");
+                    break;
             }
+        }
+
+        private enum ActionType
+        {
+            OpenScreen,
+            CloseTopScreen,
+            CloseAllScreens
         }
     }
 }
