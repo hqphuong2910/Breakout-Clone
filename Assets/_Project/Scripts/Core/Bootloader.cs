@@ -32,7 +32,7 @@ namespace _Project.Scripts.Core
         {
             if (!gameConfig)
             {
-                AppLogger.LogError(name,
+                AppLogger.LogError(this,
                     $"Missing {nameof(gameConfig)} reference. " +
                     "Please drag and drop it in the inspector.");
                 return;
@@ -43,17 +43,17 @@ namespace _Project.Scripts.Core
             Application.targetFrameRate = (int)gameConfig.targetFPS;
             QualitySettings.vSyncCount = gameConfig.vSync ? 1 : 0;
 
-            AppLogger.Log(name,
+            AppLogger.Log(this,
                 $"Loading {gameConfig.gameName}: " +
                 $"Version: {gameConfig.gameVersion}");
         }
 
         private IEnumerator InitializeSystem()
         {
-            AppLogger.Log(name, "Initializing backend systems...");
+            AppLogger.Log(this, "Initializing backend systems...");
             // TODO: Delete the line below and implement actual system initialization logic.
             yield return new WaitForSeconds(0.5f);
-            AppLogger.Log(name, "Backend systems are ready.");
+            AppLogger.Log(this, "Backend systems are ready.");
             SystemEvents.OnSystemReady?.Invoke();
         }
     }

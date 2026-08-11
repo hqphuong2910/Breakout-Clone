@@ -18,7 +18,7 @@ namespace _Project.Scripts.Managers
 
         private IEnumerator LoadSceneAsyncRoutine(string sceneName, Action onLoaded = null)
         {
-            AppLogger.Log(name, $"Starting async load for scene: {sceneName}");
+            AppLogger.Log(this, $"Starting async load for scene: {sceneName}");
 
             var asyncOperation = SceneManager.LoadSceneAsync(sceneName);
             if (asyncOperation != null)
@@ -34,7 +34,7 @@ namespace _Project.Scripts.Managers
                 }
             }
 
-            AppLogger.Log(name, $"Successfully loaded scene: {sceneName}.");
+            AppLogger.Log(this, $"Successfully loaded scene: {sceneName}.");
 
             onLoaded?.Invoke();
         }
@@ -82,7 +82,7 @@ namespace _Project.Scripts.Managers
         {
             if (string.IsNullOrEmpty(sceneName))
             {
-                AppLogger.LogError(name, "Scene name is null or empty.");
+                AppLogger.LogError(this, "Scene name is null or empty.");
                 return;
             }
 

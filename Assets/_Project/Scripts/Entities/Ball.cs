@@ -43,7 +43,7 @@ namespace _Project.Scripts.Entities
             _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             _rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
-            AppLogger.Log(name, $"Successfully loaded {nameof(Rigidbody2D)} component.");
+            AppLogger.Log(this, $"Successfully loaded {nameof(Rigidbody2D)} component.");
         }
 
         #endregion
@@ -114,7 +114,7 @@ namespace _Project.Scripts.Entities
             if (other.CompareTag("DeadZone"))
             {
                 GameEvents.OnBallDropped?.Invoke();
-                AppLogger.Log(name, $"Dropped into {other.name}.");
+                AppLogger.Log(this, $"Dropped into {other.name}.");
                 ResetBall();
             }
         }
@@ -127,7 +127,7 @@ namespace _Project.Scripts.Entities
             _rb.linearVelocity = direction * ballSpeed;
             _isLaunched = true;
 
-            AppLogger.Log(name, "Launched.");
+            AppLogger.Log(this, "Launched.");
         }
 
         private void ResetBall()
@@ -135,7 +135,7 @@ namespace _Project.Scripts.Entities
             _isLaunched = false;
             _rb.linearVelocity = Vector2.zero;
 
-            AppLogger.Log(name, "Reset.");
+            AppLogger.Log(this, "Reset.");
         }
 
         #endregion

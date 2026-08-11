@@ -20,7 +20,7 @@ namespace _Project.Scripts.Managers
             base.Start();
 
             ResetGameData();
-            ChangeState(gameConfig.bypassMainMenu ? GameState.Started : GameState.MainMenu, false);
+            ChangeState(GameState.Initializing, false);
         }
 
         #region EVENT_HANDLERS
@@ -52,14 +52,14 @@ namespace _Project.Scripts.Managers
         private void ResetGameData()
         {
             RemainingLives = maxLives;
-            AppLogger.Log(name, $"Remaining lives: {RemainingLives}.");
+            AppLogger.Log(this, $"Remaining lives: {RemainingLives}.");
             GameEvents.OnLivesChanged?.Invoke(RemainingLives);
 
             CurrentScore = 0;
-            AppLogger.Log(name, $"Current score: {CurrentScore}.");
+            AppLogger.Log(this, $"Current score: {CurrentScore}.");
             GameEvents.OnScoreChanged?.Invoke(CurrentScore);
 
-            AppLogger.Log(name, "Reset game data.");
+            AppLogger.Log(this, "Reset game data.");
         }
 
         private void RemoveLives()
@@ -69,12 +69,12 @@ namespace _Project.Scripts.Managers
             if (RemainingLives <= 0)
             {
                 RemainingLives = 0;
-                AppLogger.Log(name, $"Remaining lives: {RemainingLives}.");
+                AppLogger.Log(this, $"Remaining lives: {RemainingLives}.");
                 GameOver();
                 return;
             }
 
-            AppLogger.Log(name, $"Remaining lives: {RemainingLives}.");
+            AppLogger.Log(this, $"Remaining lives: {RemainingLives}.");
 
             GameEvents.OnLivesChanged?.Invoke(RemainingLives);
         }
@@ -83,7 +83,7 @@ namespace _Project.Scripts.Managers
         {
             CurrentScore += score;
 
-            AppLogger.Log(name, $"Current score: {CurrentScore}.");
+            AppLogger.Log(this, $"Current score: {CurrentScore}.");
 
             GameEvents.OnScoreChanged?.Invoke(CurrentScore);
         }
@@ -94,7 +94,7 @@ namespace _Project.Scripts.Managers
             Time.timeScale = 1f;
             ChangeState(GameState.Started, true);
 
-            AppLogger.Log(name, "Successfully reloaded game.");
+            AppLogger.Log(this, "Successfully reloaded game.");
         }
 
         private void PauseGame()
@@ -103,7 +103,7 @@ namespace _Project.Scripts.Managers
 
             Time.timeScale = 0f;
             ChangeState(GameState.Paused, false);
-            AppLogger.Log(name, $"Game paused.");
+            AppLogger.Log(this, "Game paused.");
         }
 
         private void ResumeGame()
@@ -112,7 +112,7 @@ namespace _Project.Scripts.Managers
 
             Time.timeScale = 1f;
             ChangeState(GameState.Started, true);
-            AppLogger.Log(name, $"Game resumed.");
+            AppLogger.Log(this, "Game resumed.");
         }
 
         private void GameOver()
@@ -120,7 +120,7 @@ namespace _Project.Scripts.Managers
             Time.timeScale = 0f;
 
             ChangeState(GameState.GameOver, false);
-            AppLogger.Log(name, $"Game over.");
+            AppLogger.Log(this, "Game over.");
             GameEvents.OnGameOver?.Invoke();
         }
 
@@ -154,7 +154,7 @@ namespace _Project.Scripts.Managers
         private void HandleLevelCompleted()
         {
             Time.timeScale = 0f;
-            AppLogger.Log(name, "Level completed.");
+            AppLogger.Log(this, "Level completed.");
             ChangeState(GameState.LevelCompleted, false);
         }
 

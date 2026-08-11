@@ -1,5 +1,4 @@
-﻿using _Project.Scripts.Events;
-using _Project.Scripts.Managers;
+﻿using _Project.Scripts.Managers;
 using _Project.Scripts.Patterns;
 using UnityEngine;
 using UnityEngine.UI;

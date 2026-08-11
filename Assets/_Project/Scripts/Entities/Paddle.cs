@@ -49,7 +49,7 @@ namespace _Project.Scripts.Entities
             _rb.interpolation = RigidbodyInterpolation2D.Interpolate;
             _rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionY;
 
-            AppLogger.Log(name, $"Successfully loaded {nameof(Rigidbody2D)} component.");
+            AppLogger.Log(this, $"Successfully loaded {nameof(Rigidbody2D)} component.");
         }
 
         #endregion

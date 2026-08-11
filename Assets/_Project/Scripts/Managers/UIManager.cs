@@ -36,6 +36,12 @@ namespace _Project.Scripts.Managers
             if (screenMappings is not { Count: > 0 }) return;
             foreach (var mapping in screenMappings)
             {
+                if (mapping.screenType == ScreenType.None || !mapping.screenObject)
+                {
+                    AppLogger.LogError(this, "Invalid screen mapping found.");
+                    return;
+                }
+
                 mapping.screenObject.SetActive(false);
                 _screenDict.Add(mapping.screenType, mapping.screenObject);
             }
@@ -82,7 +88,7 @@ namespace _Project.Scripts.Managers
 
             if (!_screenDict.TryGetValue(type, out var targetScreen))
             {
-                AppLogger.LogWarning(name, $"Screen {type} is not registered in {name}.");
+                AppLogger.LogWarning(this, $"Screen {type} is not registered in {name}.");
                 return;
             }
 
@@ -91,14 +97,14 @@ namespace _Project.Scripts.Managers
             targetScreen.SetActive(true);
             _screenStack.Push(targetScreen);
 
-            AppLogger.Log(name, $"Opened screen: {type}.");
+            AppLogger.Log(this, $"Opened screen: {type}.");
         }
 
         private void CloseTopScreen()
         {
             if (_screenStack.Count <= 0)
             {
-                AppLogger.LogWarning(name, "No screens to close.");
+                AppLogger.LogWarning(this, "No screens to close.");
                 return;
             }
 
@@ -120,10 +126,6 @@ namespace _Project.Scripts.Managers
                 case GameState.Initializing:
                     OpenScreen(ScreenType.LoadingScreen);
                     break;
-                case GameState.MainMenu:
-                    CloseAllScreens();
-                    OpenScreen(ScreenType.MainMenu);
-                    break;
                 case GameState.Started:
                     CloseAllScreens();
                     OpenScreen(ScreenType.HUD);
@@ -137,7 +139,7 @@ namespace _Project.Scripts.Managers
                     OpenScreen(ScreenType.GameOver);
                     break;
                 default:
-                    AppLogger.LogError(name, $"No suitable screens found for current game state: {state}.");
+                    AppLogger.LogError(this, $"No suitable screens found for current game state: {state}.");
                     break;
             }
         }

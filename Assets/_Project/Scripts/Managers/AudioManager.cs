@@ -43,7 +43,7 @@ namespace _Project.Scripts.Managers
             if (BGMSource) return;
             BGMSource = GetComponent<AudioSource>();
 
-            AppLogger.Log(name, "Successfully loaded BGM audio source.");
+            AppLogger.Log(this, "Successfully loaded BGM audio source.");
         }
 
         private void LoadSFXSource()
@@ -51,7 +51,7 @@ namespace _Project.Scripts.Managers
             if (SFXSource) return;
             SFXSource = gameObject.AddComponent<AudioSource>();
 
-            AppLogger.Log(name, "Successfully loaded SFX audio source.");
+            AppLogger.Log(this, "Successfully loaded SFX audio source.");
         }
 
         #endregion
@@ -89,7 +89,7 @@ namespace _Project.Scripts.Managers
             BGMSource.loop = loop;
             BGMSource.Play();
 
-            AppLogger.Log(name, $"Playing BGM: {clip.name}.");
+            AppLogger.Log(this, $"Playing BGM: {clip.name}.");
         }
 
         private void StopMusic()

@@ -24,7 +24,7 @@ namespace _Project.Scripts.Managers
         {
             if (_inputActions != null) return;
             _inputActions = new GameInputActions();
-            AppLogger.Log(name, $"Successfully loaded {nameof(GameInputActions)}.");
+            AppLogger.Log(this, $"Successfully loaded {nameof(GameInputActions)}.");
         }
 
         #endregion

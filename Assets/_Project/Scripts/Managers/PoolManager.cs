@@ -40,7 +40,7 @@ namespace _Project.Scripts.Managers
                 foreach (var obj in preWarmedObjects) Despawn(obj);
             }
 
-            AppLogger.Log(name, "Successfully pre-warmed all registered pools.");
+            AppLogger.Log(this, "Successfully pre-warmed all registered pools.");
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace _Project.Scripts.Managers
             );
 
             _pools.Add(poolKey, pool);
-            AppLogger.Log(name, $"Created new pool for {prefab.name}");
+            AppLogger.Log(this, $"Created new pool for {prefab.name}");
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace _Project.Scripts.Managers
             }
             else
             {
-                AppLogger.LogWarning(name, $"This object doesn't belong to {name}. Destroying...");
+                AppLogger.LogWarning(this, $"This object doesn't belong to {name}. Destroying...");
                 Destroy(instance);
             }
         }
