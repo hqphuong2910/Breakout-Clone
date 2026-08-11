@@ -51,6 +51,7 @@ namespace _Project.Scripts.Core
         private IEnumerator InitializeSystem()
         {
             AppLogger.Log(this, "Initializing backend systems...");
+            GameEvents.OnInitializing?.Invoke();
             // TODO: Delete the line below and implement actual system initialization logic.
             yield return new WaitForSeconds(0.5f);
             AppLogger.Log(this, "Backend systems are ready.");

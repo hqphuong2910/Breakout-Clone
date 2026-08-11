@@ -29,20 +29,26 @@ namespace _Project.Scripts.Managers
         {
             base.SubscribeEvents();
 
+            GameEvents.OnInitializing += HandleInitializing;
             GameEvents.OnGameStarted += HandleGameStarted;
             GameEvents.OnBrickDestroyed += AddScore;
             GameEvents.OnBallDropped += RemoveLives;
             GameEvents.OnLevelCompleted += HandleLevelCompleted;
+
+            InputEvents.OnCancel += HandlePauseInput;
         }
 
         protected override void UnsubscribeEvents()
         {
             base.UnsubscribeEvents();
 
+            GameEvents.OnInitializing -= HandleInitializing;
             GameEvents.OnGameStarted -= HandleGameStarted;
             GameEvents.OnBrickDestroyed -= AddScore;
             GameEvents.OnBallDropped -= RemoveLives;
             GameEvents.OnLevelCompleted -= HandleLevelCompleted;
+
+            InputEvents.OnCancel -= HandlePauseInput;
         }
 
         #endregion
@@ -103,6 +109,7 @@ namespace _Project.Scripts.Managers
 
             Time.timeScale = 0f;
             ChangeState(GameState.Paused, false);
+            GameEvents.OnGamePaused?.Invoke();
             AppLogger.Log(this, "Game paused.");
         }
 
@@ -113,6 +120,12 @@ namespace _Project.Scripts.Managers
             Time.timeScale = 1f;
             ChangeState(GameState.Started, true);
             AppLogger.Log(this, "Game resumed.");
+        }
+
+        private void LevelCompleted()
+        {
+            AppLogger.Log(this, "Level completed.");
+            ChangeState(GameState.LevelCompleted, false);
         }
 
         private void GameOver()
@@ -146,21 +159,16 @@ namespace _Project.Scripts.Managers
             ReloadGame();
         }
 
-        private void HandleGamePaused()
+        private void HandlePauseInput()
         {
-            ChangeState(GameState.Paused, false);
+            if (CurrentState == GameState.Started)
+                PauseGame();
+            else if (CurrentState == GameState.Paused) ResumeGame();
         }
 
         private void HandleLevelCompleted()
         {
-            Time.timeScale = 0f;
-            AppLogger.Log(this, "Level completed.");
-            ChangeState(GameState.LevelCompleted, false);
-        }
-
-        private void HandleGameOver()
-        {
-            ChangeState(GameState.GameOver, false);
+            LevelCompleted();
         }
 
         #endregion

@@ -8,8 +8,8 @@ namespace _Project.Scripts.Events
     {
         public static Action<GameState> OnGameStateChanged;
         public static Action OnInitializing;
-        public static Action OnMainMenu;
         public static Action OnGameStarted;
+        public static Action OnGamePaused;
         public static Action OnLevelCompleted;
         public static Action OnGameOver;
 

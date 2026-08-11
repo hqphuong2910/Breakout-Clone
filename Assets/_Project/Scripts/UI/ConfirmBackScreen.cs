@@ -20,6 +20,7 @@ namespace _Project.Scripts.UI
 
         private static void BackToMainMenu()
         {
+            Time.timeScale = 1f;
             SceneEvents.OnRequestLoadMainMenu?.Invoke();
         }
     }
