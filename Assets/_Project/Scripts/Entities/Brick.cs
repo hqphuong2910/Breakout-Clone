@@ -34,7 +34,7 @@ namespace _Project.Scripts.Entities
         {
             if (!brickData)
             {
-                AppLogger.LogError(name, $"No {nameof(brickData)} found.");
+                AppLogger.LogError(this, $"No {nameof(brickData)} found.");
                 return;
             }
 
@@ -79,7 +79,7 @@ namespace _Project.Scripts.Entities
             if (_renderer) return;
             _renderer = GetComponent<SpriteRenderer>();
 
-            AppLogger.Log(name, $"Successfully loaded {nameof(SpriteRenderer)} component.");
+            AppLogger.Log(this, $"Successfully loaded {nameof(SpriteRenderer)} component.");
         }
 
         #endregion

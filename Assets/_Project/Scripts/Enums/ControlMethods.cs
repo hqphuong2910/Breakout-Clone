@@ -1,6 +1,6 @@
 ﻿namespace _Project.Scripts.Enums
 {
-    public enum ControlType
+    public enum ControlMethods
     {
         KeyboardOrGamepad,
         MouseOrTouchscreen

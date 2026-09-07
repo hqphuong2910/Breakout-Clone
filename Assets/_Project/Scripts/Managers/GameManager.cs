@@ -11,8 +11,8 @@ namespace _Project.Scripts.Managers
     {
         [SerializeField] private GameConfigSO gameConfig;
         [SerializeField] private int maxLives = 3;
-        private int _currentScore;
-        private int _remainingLives;
+        public int CurrentScore { get; private set; }
+        public int RemainingLives { get; private set; }
         public GameState CurrentState { get; private set; }
 
         protected override void Start()
@@ -20,7 +20,7 @@ namespace _Project.Scripts.Managers
             base.Start();
 
             ResetGameData();
-            ChangeState(gameConfig.bypassMainMenu ? GameState.Playing : GameState.MainMenu, false);
+            ChangeState(GameState.Initializing, false);
         }
 
         #region EVENT_HANDLERS
@@ -29,100 +29,146 @@ namespace _Project.Scripts.Managers
         {
             base.SubscribeEvents();
 
-            GameEvents.OnBrickDestroyed += HandleBrickDestroyed;
-            GameEvents.OnBallDropped += HandleBallDropped;
+            GameEvents.OnInitializing += HandleInitializing;
+            GameEvents.OnGameStarted += HandleGameStarted;
+            GameEvents.OnBrickDestroyed += AddScore;
+            GameEvents.OnBallDropped += RemoveLives;
             GameEvents.OnLevelCompleted += HandleLevelCompleted;
+
+            InputEvents.OnCancel += HandlePauseInput;
         }
 
         protected override void UnsubscribeEvents()
         {
             base.UnsubscribeEvents();
 
-            GameEvents.OnBrickDestroyed -= HandleBrickDestroyed;
-            GameEvents.OnBallDropped -= HandleBallDropped;
+            GameEvents.OnInitializing -= HandleInitializing;
+            GameEvents.OnGameStarted -= HandleGameStarted;
+            GameEvents.OnBrickDestroyed -= AddScore;
+            GameEvents.OnBallDropped -= RemoveLives;
             GameEvents.OnLevelCompleted -= HandleLevelCompleted;
+
+            InputEvents.OnCancel -= HandlePauseInput;
         }
 
         #endregion
 
-        #region GAMEFLOW_HANDLERS
-
-        private void ChangeState(GameState newState, bool force)
-        {
-            if (!force && CurrentState == newState) return;
-
-            CurrentState = newState;
-            switch (CurrentState)
-            {
-                case GameState.Initializing:
-                case GameState.MainMenu:
-                case GameState.Playing:
-                case GameState.Paused:
-                case GameState.LevelCompleted:
-                case GameState.GameOver:
-                    AppLogger.Log(name, $"Current game state has been set to: {CurrentState}.");
-                    break;
-                default:
-                    AppLogger.LogError(name, "Invalid game state.");
-                    break;
-            }
-
-            GameEvents.OnGameStateChanged?.Invoke(CurrentState);
-        }
+        #region GAME_FLOW_HANDLERS
 
         private void ResetGameData()
         {
-            _remainingLives = maxLives;
-            AppLogger.Log(name, $"Remaining lives: {_remainingLives}.");
+            RemainingLives = maxLives;
+            AppLogger.Log(this, $"Remaining lives: {RemainingLives}.");
+            GameEvents.OnLivesChanged?.Invoke(RemainingLives);
 
-            _currentScore = 0;
-            AppLogger.Log(name, $"Current score: {_currentScore}.");
+            CurrentScore = 0;
+            AppLogger.Log(this, $"Current score: {CurrentScore}.");
+            GameEvents.OnScoreChanged?.Invoke(CurrentScore);
 
-            AppLogger.Log(name, "Reset game data.");
+            AppLogger.Log(this, "Reset game data.");
         }
 
-        private void GameOver()
+        private void RemoveLives()
         {
-            ChangeState(GameState.GameOver, false);
-            GameEvents.OnGameOver?.Invoke();
+            RemainingLives--;
+
+            if (RemainingLives <= 0)
+            {
+                RemainingLives = 0;
+                AppLogger.Log(this, $"Remaining lives: {RemainingLives}.");
+                GameOver();
+                return;
+            }
+
+            AppLogger.Log(this, $"Remaining lives: {RemainingLives}.");
+
+            GameEvents.OnLivesChanged?.Invoke(RemainingLives);
+        }
+
+        private void AddScore(int score)
+        {
+            CurrentScore += score;
+
+            AppLogger.Log(this, $"Current score: {CurrentScore}.");
+
+            GameEvents.OnScoreChanged?.Invoke(CurrentScore);
         }
 
         public void ReloadGame()
         {
             ResetGameData();
             Time.timeScale = 1f;
-            ChangeState(GameState.Playing, true);
+            ChangeState(GameState.Started, true);
 
-            AppLogger.Log(name, "Successfully reloaded game.");
+            AppLogger.Log(this, "Successfully reloaded game.");
         }
 
-        private void HandleBallDropped()
+        private void PauseGame()
         {
-            _remainingLives--;
+            if (CurrentState != GameState.Started) return;
 
-            if (_remainingLives <= 0)
-            {
-                _remainingLives = 0;
-                AppLogger.Log(name, $"Remaining lives: {_remainingLives}.");
-                GameOver();
-                return;
-            }
-
-            AppLogger.Log(name, $"Remaining lives: {_remainingLives}.");
+            Time.timeScale = 0f;
+            ChangeState(GameState.Paused, false);
+            GameEvents.OnGamePaused?.Invoke();
+            AppLogger.Log(this, "Game paused.");
         }
 
-        private void HandleBrickDestroyed(int score)
+        public void ResumeGame()
         {
-            _currentScore += score;
+            if (CurrentState != GameState.Paused) return;
 
-            AppLogger.Log(name, $"Current score: {_currentScore}.");
+            Time.timeScale = 1f;
+            ChangeState(GameState.Started, true);
+            AppLogger.Log(this, "Game resumed.");
+        }
+
+        private void LevelCompleted()
+        {
+            AppLogger.Log(this, "Level completed.");
+            ChangeState(GameState.LevelCompleted, false);
+        }
+
+        private void GameOver()
+        {
+            Time.timeScale = 0f;
+
+            ChangeState(GameState.GameOver, false);
+            AppLogger.Log(this, "Game over.");
+            GameEvents.OnGameOver?.Invoke();
+        }
+
+        #endregion
+
+        #region GAME_STATE_HANDLERS
+
+        private void ChangeState(GameState newState, bool force)
+        {
+            if (!force && CurrentState == newState) return;
+
+            CurrentState = newState;
+            GameEvents.OnGameStateChanged?.Invoke(CurrentState);
+        }
+
+        private void HandleInitializing()
+        {
+            ChangeState(GameState.Initializing, false);
+        }
+
+        private void HandleGameStarted()
+        {
+            ReloadGame();
+        }
+
+        private void HandlePauseInput()
+        {
+            if (CurrentState == GameState.Started)
+                PauseGame();
+            else if (CurrentState == GameState.Paused) ResumeGame();
         }
 
         private void HandleLevelCompleted()
         {
-            Time.timeScale = 0f;
-            AppLogger.Log(name, "Level completed.");
-            ChangeState(GameState.LevelCompleted, false);
+            LevelCompleted();
         }
 
         #endregion

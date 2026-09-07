@@ -28,7 +28,7 @@ namespace _Project.Scripts.Managers
         {
             base.Start();
 
-            if (GameManager.Instance.CurrentState == GameState.Playing)
+            if (GameManager.Instance.CurrentState == GameState.Started)
                 GenerateBricks(GameManager.Instance.CurrentState);
         }
 
@@ -56,7 +56,7 @@ namespace _Project.Scripts.Managers
 
         private void GenerateBricks(GameState currentState)
         {
-            if (currentState != GameState.Playing) return;
+            if (currentState != GameState.Started) return;
 
             ClearBricks();
             _breakableBrickCount = 0;

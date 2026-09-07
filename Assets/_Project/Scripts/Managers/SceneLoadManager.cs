@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using _Project.ScriptableObjects.Scripts;
 using _Project.Scripts.Events;
 using _Project.Scripts.Patterns;
@@ -15,10 +16,9 @@ namespace _Project.Scripts.Managers
 
         #region ASYCN_LOADING_ROUTINE
 
-        private IEnumerator LoadSceneAsyncRoutine(string sceneName)
+        private IEnumerator LoadSceneAsyncRoutine(string sceneName, Action onLoaded = null)
         {
-            AppLogger.Log(name, $"Starting async load for scene: {sceneName}");
-            // UIEvents.OnOpenScreen?.Invoke(ScreenType.LoadingScreen);
+            AppLogger.Log(this, $"Starting async load for scene: {sceneName}");
 
             var asyncOperation = SceneManager.LoadSceneAsync(sceneName);
             if (asyncOperation != null)
@@ -34,9 +34,9 @@ namespace _Project.Scripts.Managers
                 }
             }
 
-            AppLogger.Log(name, $"Successfully loaded scene: {sceneName}.");
+            AppLogger.Log(this, $"Successfully loaded scene: {sceneName}.");
 
-            // UIEvents.OnCloseTopScreen?.Invoke();
+            onLoaded?.Invoke();
         }
 
         #endregion
@@ -68,20 +68,21 @@ namespace _Project.Scripts.Managers
         private void LoadGameplayScene()
         {
             if (!gameConfig) return;
-            SceneManager.LoadScene(gameConfig.gameplaySceneName);
+            StartCoroutine(LoadSceneAsyncRoutine(gameConfig.gameplaySceneName,
+                () => { GameEvents.OnGameStarted?.Invoke(); }));
         }
 
         private void LoadMainMenuScene()
         {
             if (!gameConfig) return;
-            SceneManager.LoadScene(gameConfig.mainMenuSceneName);
+            StartCoroutine(LoadSceneAsyncRoutine(gameConfig.mainMenuSceneName));
         }
 
         private void LoadSceneByName(string sceneName)
         {
             if (string.IsNullOrEmpty(sceneName))
             {
-                AppLogger.LogError(name, "Scene name is null or empty.");
+                AppLogger.LogError(this, "Scene name is null or empty.");
                 return;
             }
 
