@@ -6,6 +6,6 @@ namespace _Project.ScriptableObjects.Scripts
     [CreateAssetMenu(menuName = "Breakout/Control Configuration", fileName = "ControlConfig")]
     public class ControlConfigSO : ScriptableObject
     {
-        public ControlType controlType = ControlType.KeyboardOrGamepad;
+        public ControlMethods controlMethods = ControlMethods.KeyboardOrGamepad;
     }
 }

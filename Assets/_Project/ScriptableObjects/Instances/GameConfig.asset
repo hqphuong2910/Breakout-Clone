@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.ScriptableObjects.Scripts.GameConfigSO
   gameName: Breakout
   gameVersion: 0.6.0
-  targetFPS: 60
+  targetFPS: 30
   vSync: 1
   mainMenuSceneName: 01_MainMenu
   gameplaySceneName: 02_Gameplay

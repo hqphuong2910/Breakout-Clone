@@ -10,6 +10,7 @@
         PauseMenu,
         GameOver,
         ConfirmExit,
-        ConfirmBack
+        ConfirmBack,
+        ConfirmSave
     }
 }

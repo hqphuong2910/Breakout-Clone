@@ -78,13 +78,13 @@ namespace _Project.Scripts.Entities
 
         private void GetKeyInputValue(float value)
         {
-            if (controlConfig.controlType != ControlType.KeyboardOrGamepad) return;
+            if (controlConfig.controlMethods != ControlMethods.KeyboardOrGamepad) return;
             _moveInput = value;
         }
 
         private void GetPointerPosition(Vector2 screenPos)
         {
-            if (controlConfig.controlType != ControlType.MouseOrTouchscreen) return;
+            if (controlConfig.controlMethods != ControlMethods.MouseOrTouchscreen) return;
             if (!Camera.main) return;
             var posZ = Mathf.Abs(Camera.main.transform.position.z);
             var newPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, posZ));
@@ -103,15 +103,15 @@ namespace _Project.Scripts.Entities
         private void HandleMovement()
         {
             Vector2 moveDirection;
-            switch (controlConfig.controlType)
+            switch (controlConfig.controlMethods)
             {
-                case ControlType.KeyboardOrGamepad:
+                case ControlMethods.KeyboardOrGamepad:
                     var moveDelta = _moveInput * moveSpeed * Time.fixedDeltaTime;
                     var nextX = transform.position.x + moveDelta;
                     nextX = Mathf.Clamp(nextX, -maxX, maxX);
                     moveDirection = new Vector2(nextX, transform.position.y);
                     break;
-                case ControlType.MouseOrTouchscreen:
+                case ControlMethods.MouseOrTouchscreen:
                     _pointerTargetX = Mathf.Clamp(_pointerTargetX, -maxX, maxX);
                     moveDirection = new Vector2(_pointerTargetX, transform.position.y);
                     break;
