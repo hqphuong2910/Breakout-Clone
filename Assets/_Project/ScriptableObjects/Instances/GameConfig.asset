@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ae44fa5be14705a2e5c336d207f743, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.ScriptableObjects.Scripts.GameConfigSO
-  appName: My Game
-  appVersion: 0.1.0
+  gameName: Breakout
+  gameVersion: 1.0.0
   targetFPS: 60
   vSync: 1
   mainMenuSceneName: 01_MainMenu

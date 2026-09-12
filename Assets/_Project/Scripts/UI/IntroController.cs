@@ -43,7 +43,7 @@ namespace _Project.Scripts.UI
 
         private IEnumerator PlayIntroRoutine()
         {
-            AppLogger.Log(name, $"Playing intro for {introDuration} seconds...");
+            AppLogger.Log(this, $"Playing intro for {introDuration} seconds...");
             yield return new WaitForSeconds(introDuration);
 
             if (!_isIntroFinished) FinishIntro();
@@ -52,16 +52,15 @@ namespace _Project.Scripts.UI
         private void HandleSystemReady()
         {
             _isSystemReady = true;
-            AppLogger.Log(name, "System is ready.");
             TryTransition();
         }
 
         private void FinishIntro()
         {
             _isIntroFinished = true;
-            AppLogger.Log(name, "Intro finished.");
+            AppLogger.Log(this, "Intro finished.");
 
-            if (!_isSystemReady) AppLogger.LogWarning(name, "Waiting for backend to finish loading...");
+            if (!_isSystemReady) AppLogger.LogWarning(this, "Waiting for backend to finish loading...");
             // TODO: Put a text panel "Loading..." or something else here.
             TryTransition();
         }
@@ -74,12 +73,12 @@ namespace _Project.Scripts.UI
 
             if (gameConfig && gameConfig.bypassMainMenu)
             {
-                AppLogger.Log(name, "Requesting Gameplay scene.");
+                AppLogger.Log(this, "Requesting Gameplay scene.");
                 SceneEvents.OnRequestLoadGameplay?.Invoke();
             }
             else
             {
-                AppLogger.Log(name, "Requesting Main Menu scene.");
+                AppLogger.Log(this, "Requesting Main Menu scene.");
                 SceneEvents.OnRequestLoadMainMenu?.Invoke();
             }
         }
@@ -87,7 +86,7 @@ namespace _Project.Scripts.UI
         private void SkipIntro()
         {
             if (!allowSkip || _isIntroFinished) return;
-            AppLogger.Log(name, "Intro skipped via user input.");
+            AppLogger.Log(this, "Intro skipped via user input.");
             FinishIntro();
         }
     }

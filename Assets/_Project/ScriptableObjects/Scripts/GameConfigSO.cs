@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace _Project.ScriptableObjects.Scripts
 {
-    [CreateAssetMenu(menuName = "Template/Game Config", fileName = "GameConfig")]
+    [CreateAssetMenu(menuName = "Breakout/Game Configuration", fileName = "GameConfig")]
     public class GameConfigSO : ScriptableObject
     {
-        [Header("App Info")] public string appName = "My Game";
-        public string appVersion = "0.1.0";
+        [Header("Game Info")] public string gameName = "Breakout";
+        public string gameVersion;
 
         [Header("Performance Setting(s)")] public FPSLimit targetFPS = FPSLimit.Limit60;
         public bool vSync = true;

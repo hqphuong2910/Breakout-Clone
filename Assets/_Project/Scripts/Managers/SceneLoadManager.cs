@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using _Project.ScriptableObjects.Scripts;
 using _Project.Scripts.Events;
 using _Project.Scripts.Patterns;
@@ -12,6 +13,35 @@ namespace _Project.Scripts.Managers
     {
         [Header("Dependencies")] [SerializeField]
         private GameConfigSO gameConfig;
+
+        #region ASYCN_LOADING_ROUTINE
+
+        private IEnumerator LoadSceneAsyncRoutine(string sceneName, Action onLoaded = null)
+        {
+            AppLogger.Log(this, $"Starting async load for scene: {sceneName}");
+
+            var asyncOperation = SceneManager.LoadSceneAsync(sceneName);
+            if (asyncOperation != null)
+            {
+                asyncOperation.allowSceneActivation = false;
+                while (!asyncOperation.isDone)
+                {
+                    var progress = Mathf.Clamp01(asyncOperation.progress / 0.9f);
+
+                    if (asyncOperation.progress >= 0.9f) asyncOperation.allowSceneActivation = true;
+
+                    yield return null;
+                }
+            }
+
+            AppLogger.Log(this, $"Successfully loaded scene: {sceneName}.");
+
+            onLoaded?.Invoke();
+        }
+
+        #endregion
+
+        #region EVENT_HANDLERS
 
         protected override void SubscribeEvents()
         {
@@ -31,54 +61,28 @@ namespace _Project.Scripts.Managers
             SceneEvents.OnRequestLoadScene -= LoadSceneByName;
         }
 
-        #region ASYCN LOADING ROUTINE
-
-        private IEnumerator LoadSceneAsyncRoutine(string sceneName)
-        {
-            AppLogger.Log(name, $"Starting async load for scene: {sceneName}");
-            // UIEvents.OnOpenScreen?.Invoke(ScreenType.LoadingScreen);
-
-            var asyncOperation = SceneManager.LoadSceneAsync(sceneName);
-            if (asyncOperation != null)
-            {
-                asyncOperation.allowSceneActivation = false;
-                while (!asyncOperation.isDone)
-                {
-                    var progress = Mathf.Clamp01(asyncOperation.progress / 0.9f);
-
-                    if (asyncOperation.progress >= 0.9f) asyncOperation.allowSceneActivation = true;
-
-                    yield return null;
-                }
-            }
-
-            AppLogger.Log(name, $"Successfully loaded scene: {sceneName}.");
-
-            // UIEvents.OnCloseTopScreen?.Invoke();
-        }
-
         #endregion
 
-
-        #region EVENT HANDLERS
+        #region SCENE_HANDLERS
 
         private void LoadGameplayScene()
         {
             if (!gameConfig) return;
-            SceneManager.LoadScene(gameConfig.gameplaySceneName);
+            StartCoroutine(LoadSceneAsyncRoutine(gameConfig.gameplaySceneName,
+                () => { GameEvents.OnGameStarted?.Invoke(); }));
         }
 
         private void LoadMainMenuScene()
         {
             if (!gameConfig) return;
-            SceneManager.LoadScene(gameConfig.mainMenuSceneName);
+            StartCoroutine(LoadSceneAsyncRoutine(gameConfig.mainMenuSceneName));
         }
 
         private void LoadSceneByName(string sceneName)
         {
             if (string.IsNullOrEmpty(sceneName))
             {
-                AppLogger.LogError(name, "Scene name is null or empty.");
+                AppLogger.LogError(this, "Scene name is null or empty.");
                 return;
             }
 

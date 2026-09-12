@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using _Project.Scripts.Enums;
 using _Project.Scripts.Events;
 using _Project.Scripts.Patterns;
@@ -12,7 +11,7 @@ namespace _Project.Scripts.Managers
     public class UIManager : Singleton<UIManager>
     {
         [Header("UI Configurations")]
-        [Tooltip("Drag and drop the screen objects that match the screen types here.")]
+        [Tooltip("Attach the screen objects and set their corresponding screen type here.")]
         [SerializeField]
         private List<ScreenMapping> screenMappings;
 
@@ -21,12 +20,28 @@ namespace _Project.Scripts.Managers
         private readonly Dictionary<ScreenType, GameObject> _screenDict = new();
         private readonly Stack<GameObject> _screenStack = new();
 
+        [Serializable]
+        public struct ScreenMapping
+        {
+            public ScreenType screenType;
+            public GameObject screenObject;
+        }
+
+        #region INITIALIZATION
+
         protected override void LoadComponents()
         {
             base.LoadComponents();
 
-            foreach (var mapping in screenMappings.Where(mappings => mappings.screenObject))
+            if (screenMappings is not { Count: > 0 }) return;
+            foreach (var mapping in screenMappings)
             {
+                if (mapping.screenType == ScreenType.None || !mapping.screenObject)
+                {
+                    AppLogger.LogError(this, "Invalid screen mapping found.");
+                    return;
+                }
+
                 mapping.screenObject.SetActive(false);
                 _screenDict.Add(mapping.screenType, mapping.screenObject);
             }
@@ -39,6 +54,10 @@ namespace _Project.Scripts.Managers
             if (defaultScreen != ScreenType.None) OpenScreen(defaultScreen);
         }
 
+        #endregion
+
+        #region EVENT_HANDLERS
+
         protected override void SubscribeEvents()
         {
             base.SubscribeEvents();
@@ -46,6 +65,7 @@ namespace _Project.Scripts.Managers
             UIEvents.OnOpenScreen += OpenScreen;
             UIEvents.OnCloseTopScreen += CloseTopScreen;
             UIEvents.OnCloseAllScreens += CloseAllScreens;
+            GameEvents.OnGameStateChanged += HandleGameStateChanged;
         }
 
         protected override void UnsubscribeEvents()
@@ -55,13 +75,20 @@ namespace _Project.Scripts.Managers
             UIEvents.OnOpenScreen -= OpenScreen;
             UIEvents.OnCloseTopScreen -= CloseTopScreen;
             UIEvents.OnCloseAllScreens -= CloseAllScreens;
+            GameEvents.OnGameStateChanged -= HandleGameStateChanged;
         }
+
+        #endregion
+
+        #region SCREEN_HANDLERS
 
         private void OpenScreen(ScreenType type)
         {
+            if (type == ScreenType.None) return;
+
             if (!_screenDict.TryGetValue(type, out var targetScreen))
             {
-                AppLogger.LogWarning(name, $"Screen {type} is not registered in {name}.");
+                AppLogger.LogWarning(this, $"Screen {type} is not registered.");
                 return;
             }
 
@@ -70,14 +97,14 @@ namespace _Project.Scripts.Managers
             targetScreen.SetActive(true);
             _screenStack.Push(targetScreen);
 
-            AppLogger.Log(name, $"Opened screen: {type}.");
+            AppLogger.Log(this, $"Opened screen: {type}.");
         }
 
         private void CloseTopScreen()
         {
             if (_screenStack.Count <= 0)
             {
-                AppLogger.LogWarning(name, "No screens to close.");
+                AppLogger.LogWarning(this, "No screens to close.");
                 return;
             }
 
@@ -92,11 +119,33 @@ namespace _Project.Scripts.Managers
             while (_screenStack.Count > 0) _screenStack.Pop().SetActive(false);
         }
 
-        [Serializable]
-        public struct ScreenMapping
+        private void HandleGameStateChanged(GameState state)
         {
-            public ScreenType screenType;
-            public GameObject screenObject;
+            switch (state)
+            {
+                case GameState.Initializing:
+                    OpenScreen(ScreenType.LoadingScreen);
+                    break;
+                case GameState.Started:
+                    CloseAllScreens();
+                    OpenScreen(ScreenType.HUD);
+                    break;
+                case GameState.Paused:
+                    OpenScreen(ScreenType.PauseMenu);
+                    break;
+                case GameState.LevelCompleted:
+                    break;
+                case GameState.GameOver:
+                    OpenScreen(ScreenType.GameOver);
+                    break;
+                default:
+                    AppLogger.LogError(this,
+                        $"No suitable screens found for current game state: {state}."
+                    );
+                    break;
+            }
         }
+
+        #endregion
     }
 }

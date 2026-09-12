@@ -23,12 +23,40 @@ namespace _Project.Scripts.Managers
 
         [SerializeField] private AudioSource SFXSource;
 
+        #region INITIALIZATION
+
         protected override void LoadComponents()
         {
             base.LoadComponents();
 
             LoadAudioSource();
         }
+
+        private void LoadAudioSource()
+        {
+            LoadBGMSource();
+            LoadSFXSource();
+        }
+
+        private void LoadBGMSource()
+        {
+            if (BGMSource) return;
+            BGMSource = GetComponent<AudioSource>();
+
+            AppLogger.Log(this, "Successfully loaded BGM audio source.");
+        }
+
+        private void LoadSFXSource()
+        {
+            if (SFXSource) return;
+            SFXSource = gameObject.AddComponent<AudioSource>();
+
+            AppLogger.Log(this, "Successfully loaded SFX audio source.");
+        }
+
+        #endregion
+
+        #region EVENT_HANDLERS
 
         protected override void SubscribeEvents()
         {
@@ -48,29 +76,11 @@ namespace _Project.Scripts.Managers
             AudioEvents.OnPlaySFX -= PlaySFX;
         }
 
-        private void LoadAudioSource()
-        {
-            LoadBGMSource();
-            LoadSFXSource();
-        }
+        #endregion
 
-        private void LoadBGMSource()
-        {
-            if (BGMSource) return;
-            BGMSource = GetComponent<AudioSource>();
+        #region AUDIO_HANDLERS
 
-            AppLogger.Log(name, "Successfully loaded BGM audio source.");
-        }
-
-        private void LoadSFXSource()
-        {
-            if (SFXSource) return;
-            SFXSource = gameObject.AddComponent<AudioSource>();
-
-            AppLogger.Log(name, "Successfully loaded SFX audio source.");
-        }
-
-        #region EVENT RECEIVERS
+        #region PLAYERS
 
         private void PlayMusic(AudioClip clip, bool loop = true)
         {
@@ -79,7 +89,7 @@ namespace _Project.Scripts.Managers
             BGMSource.loop = loop;
             BGMSource.Play();
 
-            AppLogger.Log(name, $"Playing BGM: {clip.name}.");
+            AppLogger.Log(this, $"Playing BGM: {clip.name}.");
         }
 
         private void StopMusic()
@@ -95,7 +105,7 @@ namespace _Project.Scripts.Managers
 
         #endregion
 
-        #region VOLUME SETTINGS
+        #region VOLUME_HANDLERS
 
         private void SetVolume(string paramName, float sliderValue)
         {
@@ -117,6 +127,8 @@ namespace _Project.Scripts.Managers
         {
             SetVolume(SFXVolume, sliderValue);
         }
+
+        #endregion
 
         #endregion
     }
